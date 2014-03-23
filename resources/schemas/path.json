@@ -1,0 +1,12 @@
+{
+  "name"      : "Path",
+  "properties":
+  {
+    "Path":
+    {
+      "description": "The string representation a Path.",
+      "type"       : "string",
+      "required"   : true
+    }
+  }
+}
