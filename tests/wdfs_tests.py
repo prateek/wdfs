@@ -1,11 +1,29 @@
-from nose.tools import *
 import wdfs
+import requests
+import httpretty
+from sure import expect
 
-def setup():
-    print "setup"
+class TestWdfsClient(object):
+  def setup(self):
+    params = {
+       u"host":'54.84.166.113'
+     , u"port": 8888
+     , u"user": u'ec2-user'
+    }
+    self.params = params
+    self.base_url = u"http://%(host)s:%(port)s/webhdfs/v1" % self.params
+    self.client = wdfs.client( **params )
 
-def teardown():
-    print "teardown"
+  @httpretty.activate
+  def test_home_folder(self):
 
-def test_basic():
-    print "yeah!"
+    httpretty.register_uri( httpretty.GET, self.base_url,
+            body=r'{"Path": "/user/%(user)s"}' % self.params)
+
+    home_folder = self.client.get_home_folder()
+    expect( home_folder ).to.equal( u'/user/%(user)s' % self.params )
+
+    expect( httpretty.last_request() ).to.have.property( 'querystring' ).being.equal({
+        u'user.name': [ self.params['user'] ]
+      , u'op':        [ u'GETHOMEDIRECTORY' ]
+    })
