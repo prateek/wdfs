@@ -6,9 +6,9 @@ from sure import expect
 class TestWdfsClient(object):
   def setup(self):
     params = {
-       u"host":'54.84.166.113'
-     , u"port": 8888
-     , u"user": u'ec2-user'
+       u"host":'hostname'
+     , u"port": 1234
+     , u"user": u'username'
     }
     self.params = params
     self.base_url = u"http://%(host)s:%(port)s/webhdfs/v1" % self.params
